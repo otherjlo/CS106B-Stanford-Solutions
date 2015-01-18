@@ -69,6 +69,7 @@ void CreateDictionary() {
 void PrintLadder(Stack<string> &ladder) {
     //While ladder has more elements, print the element that is popped off
     while(!ladder.isEmpty()) {
-        cout<<ladder.pop();
+        cout<<ladder.pop()<<" ";
     }
+    cout<<endl;
 }
