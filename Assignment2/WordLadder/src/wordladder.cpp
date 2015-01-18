@@ -11,10 +11,12 @@
 #include "vector.h"
 #include "queue.h"
 #include "filelib.h"
+#include "stack.h"
 
 //Methods created by me
 void WelcomePlayer();
-void createDictionary();
+void CreateDictionary();
+void PrintLadder(Stack<string> &ladder);
 
 using namespace std;
 
@@ -24,7 +26,7 @@ Vector<string> dictionary;
 int main() {
     // TODO: Finish the program!
     WelcomePlayer();
-    createDictionary();
+    CreateDictionary();
     cout << "Have a nice day." << endl;
     return 0;
 }
@@ -42,7 +44,7 @@ void WelcomePlayer() {
  * @brief createDictionary Takes the class variable dictionary, a vector
  * and adds all words from "dictionary.txt" to the vector.
  */
-void createDictionary() {
+void CreateDictionary() {
     ifstream dictstream;
     string word;
     openFile(dictstream, "dictionary.txt");
@@ -57,5 +59,16 @@ void createDictionary() {
         else {
            dictionary.add(word);
         }
+    }
+}
+
+/**
+ * @brief printLadder Takes a ladder(Stack) and prints it
+ * @param ladder The stack that is a word ladder
+ */
+void PrintLadder(Stack<string> &ladder) {
+    //While ladder has more elements, print the element that is popped off
+    while(!ladder.isEmpty()) {
+        cout<<ladder.pop();
     }
 }
