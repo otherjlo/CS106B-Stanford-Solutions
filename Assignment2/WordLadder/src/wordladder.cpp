@@ -8,17 +8,20 @@
 #include <iostream>
 #include <string>
 #include "console.h"
-#include "vector.h"
 #include "queue.h"
 #include "filelib.h"
 #include "stack.h"
 #include "set.h"
 #include "simpio.h"
+#include "vector.h"
 
 //Methods created by me
 void welcomePlayer();
 void createDictionary();
+void playWordLadder();
 void readUserInput(string &firstword, string &secondword);
+void findWordLadder(string &firstword, string &secondword);
+void getNeighbors(string &word, Vector<string> &neighbors, Set<string> &usedWords);
 void printLadder(Stack<string> &ladder);
 
 using namespace std;
@@ -30,6 +33,7 @@ int main() {
     // TODO: Finish the program!
     welcomePlayer();
     createDictionary();
+    playWordLadder();
     cout << "Have a nice day." << endl;
     return 0;
 }
@@ -65,6 +69,18 @@ void createDictionary() {
     }
 }
 
+void playWordLadder() {
+    string firstword, secondword;
+    while(true) {
+        readUserInput(firstword, secondword);
+        //Game ended, must break
+        if(firstword == "" || secondword == "") {
+            break;
+        }
+        findWordLadder(firstword, secondword);
+    }
+}
+
 /**
  * @brief readUserInput Takes in two string, and assigns them two words user inputs
  * @param firstword String to hold first word that is input
@@ -72,11 +88,15 @@ void createDictionary() {
  */
 void readUserInput(string &firstword, string &secondword) {
     while(true) {
+       //Break if first or second word is "Enter"
         firstword = getLine("Word #1 (or Enter to quit): ");
+        if(firstword == "")break;
         secondword = getLine("Word #2 (or Enter to quit): ");
+        if(secondword == "")break;
         //Make words lowercase to be found in dicitonary
         firstword = toLowerCase(firstword);
         secondword = toLowerCase(secondword);
+
         //Check if words are same
         if(firstword == secondword) {
             cout<<"The two words must be different."<<endl;
@@ -96,14 +116,65 @@ void readUserInput(string &firstword, string &secondword) {
     }
 }
 
+void findWordLadder(string &firstword, string &secondword) {
+    Queue<Stack<string> > ladderQueue;
+    Stack<string> origLadder, currLadder;
+    Set<string> usedWords;
+    string currWord;
+    Vector<string> neighbors;
+
+    origLadder.push(firstword);
+    ladderQueue.enqueue(origLadder);
+    usedWords.add(firstword);
+
+    while(!ladderQueue.isEmpty()) {
+        currLadder = ladderQueue.dequeue();
+        currWord = currLadder.peek();
+        getNeighbors(currWord, neighbors, usedWords);
+
+        for(int index = 0; index < neighbors.size(); index++) {
+            string tempword = neighbors[index];
+                if(tempword == secondword) {
+                    //Print ladder, and exit method entirely
+                    currLadder.push(tempword);
+                    cout<<"A ladder from "<<secondword<<" back to "<<firstword<<":"<<endl;
+                    printLadder(currLadder);
+                    return;
+                }
+                else {
+                    Stack<string> templadder = currLadder;
+                    templadder.push(tempword);
+                    ladderQueue.enqueue(templadder);
+                }
+            }
+        }
+    cout<<"No word ladder found from "<<secondword<<" back to "<<firstword<<".";
+}
+
+
+void getNeighbors(string &word, Vector<string> &neighbors, Set<string> &usedWords) {
+    for(int index = 0; index < word.size(); index++) {
+        for(char letter = 'a'; letter < 'z'; letter++) {
+            if(word[index] != letter) {
+                string changedword = word;
+                changedword[index] = letter;
+                if(dictionary.contains(changedword) && !usedWords.contains(changedword)) {
+                    neighbors.add(changedword);
+                    usedWords.add(changedword);
+                }
+            }
+        }
+    }
+}
+
 /**
  * @brief printLadder Takes a ladder(Stack) and prints it
  * @param ladder The stack that is a word ladder
  */
 void printLadder(Stack<string> &ladder) {
-    //While ladder has more elements, print the element that is popped off
+    //While ladder has more than one element, print the element that is popped off
     while(ladder.size() > 1) {
         cout<<ladder.pop()<<" -> ";
     }
-    cout<<ladder.pop()<<endl;
+    cout<<ladder.pop()<<endl<<endl;
 }
