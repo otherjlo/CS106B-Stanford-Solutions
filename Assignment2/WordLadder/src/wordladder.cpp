@@ -12,21 +12,24 @@
 #include "queue.h"
 #include "filelib.h"
 #include "stack.h"
+#include "set.h"
+#include "simpio.h"
 
 //Methods created by me
-void WelcomePlayer();
-void CreateDictionary();
-void PrintLadder(Stack<string> &ladder);
+void welcomePlayer();
+void createDictionary();
+void readUserInput(string &firstword, string &secondword);
+void printLadder(Stack<string> &ladder);
 
 using namespace std;
 
 //Class Variables
-Vector<string> dictionary;
+Set<string> dictionary;
 
 int main() {
     // TODO: Finish the program!
-    WelcomePlayer();
-    CreateDictionary();
+    welcomePlayer();
+    createDictionary();
     cout << "Have a nice day." << endl;
     return 0;
 }
@@ -34,7 +37,7 @@ int main() {
 /**
  * @brief WelcomePlayer Prints the welcoming message for the Word Ladder program
  */
-void WelcomePlayer() {
+void welcomePlayer() {
     cout<<"Welcome to the CS 106B Word Ladder." << endl;
     cout<<"Please give me two English words, and I will change the"<<endl;
     cout<<"first into the second by changing one letter at a time."<<endl<<endl;
@@ -44,7 +47,7 @@ void WelcomePlayer() {
  * @brief createDictionary Takes the class variable dictionary, a vector
  * and adds all words from "dictionary.txt" to the vector.
  */
-void CreateDictionary() {
+void createDictionary() {
     ifstream dictstream;
     string word;
     openFile(dictstream, "dictionary.txt");
@@ -63,13 +66,44 @@ void CreateDictionary() {
 }
 
 /**
+ * @brief readUserInput Takes in two string, and assigns them two words user inputs
+ * @param firstword String to hold first word that is input
+ * @param secondword String to hold second word that is input
+ */
+void readUserInput(string &firstword, string &secondword) {
+    while(true) {
+        firstword = getLine("Word #1 (or Enter to quit): ");
+        secondword = getLine("Word #2 (or Enter to quit): ");
+        //Make words lowercase to be found in dicitonary
+        firstword = toLowerCase(firstword);
+        secondword = toLowerCase(secondword);
+        //Check if words are same
+        if(firstword == secondword) {
+            cout<<"The two words must be different."<<endl;
+        }
+       //Check if words are same size
+        else if(firstword.size() != secondword.size()) {
+            cout<<"The two words must be the same length."<<endl;
+        }
+        //Check if words are in the dictionary
+        else if(!(dictionary.contains(firstword) && dictionary.contains(secondword))) {
+            cout<<"The two words must be found in the dictionary."<<endl;
+        }
+        //Passed all tests, break from the loop
+        else {
+            break;
+        }
+    }
+}
+
+/**
  * @brief printLadder Takes a ladder(Stack) and prints it
  * @param ladder The stack that is a word ladder
  */
-void PrintLadder(Stack<string> &ladder) {
+void printLadder(Stack<string> &ladder) {
     //While ladder has more elements, print the element that is popped off
-    while(!ladder.isEmpty()) {
-        cout<<ladder.pop()<<" ";
+    while(ladder.size() > 1) {
+        cout<<ladder.pop()<<" -> ";
     }
-    cout<<endl;
+    cout<<ladder.pop()<<endl;
 }
