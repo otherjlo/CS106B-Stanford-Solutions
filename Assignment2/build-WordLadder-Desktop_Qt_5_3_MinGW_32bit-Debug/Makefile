@@ -304,8 +304,8 @@ distclean: debug-distclean release-distclean FORCE
 	-$(DEL_FILE) Makefile
 
 copyResources:
-	xcopy "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\WordLadder\res" "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
-	 xcopy "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\WordLadder\lib\*.jar" "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
+	xcopy "C:\Users\Josue Lopez\Desktop\Assignment2\WordLadder\res" "C:\Users\Josue Lopez\Desktop\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
+	 xcopy "C:\Users\Josue Lopez\Desktop\Assignment2\WordLadder\lib\*.jar" "C:\Users\Josue Lopez\Desktop\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
 	
 
 debug-mocclean:

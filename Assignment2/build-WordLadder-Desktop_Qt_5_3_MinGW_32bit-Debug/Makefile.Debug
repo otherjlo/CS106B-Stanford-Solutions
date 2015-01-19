@@ -154,8 +154,8 @@ distclean: clean
 	-$(DEL_FILE) Makefile.Debug
 
 copyResources:
-	xcopy "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\WordLadder\res" "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
-	 xcopy "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\WordLadder\lib\*.jar" "C:\Users\Josue Lopez\Documents\GitHub\CS106B-Stanford-Solutions\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
+	xcopy "C:\Users\Josue Lopez\Desktop\Assignment2\WordLadder\res" "C:\Users\Josue Lopez\Desktop\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
+	 xcopy "C:\Users\Josue Lopez\Desktop\Assignment2\WordLadder\lib\*.jar" "C:\Users\Josue Lopez\Desktop\Assignment2\build-WordLadder-Desktop_Qt_5_3_MinGW_32bit-Debug" /e /y 
 	
 
 mocclean: compiler_moc_header_clean compiler_moc_source_clean
@@ -185,7 +185,18 @@ compiler_clean:
 ####### Compile
 
 debug/wordladder.o: ../WordLadder/src/wordladder.cpp ../WordLadder/lib/StanfordCPPLib/console.h \
-		../WordLadder/lib/StanfordCPPLib/private/main.h
+		../WordLadder/lib/StanfordCPPLib/private/main.h \
+		../WordLadder/lib/StanfordCPPLib/queue.h \
+		../WordLadder/lib/StanfordCPPLib/error.h \
+		../WordLadder/lib/StanfordCPPLib/vector.h \
+		../WordLadder/lib/StanfordCPPLib/private/foreachpatch.h \
+		../WordLadder/lib/StanfordCPPLib/random.h \
+		../WordLadder/lib/StanfordCPPLib/strlib.h \
+		../WordLadder/lib/StanfordCPPLib/filelib.h \
+		../WordLadder/lib/StanfordCPPLib/stack.h \
+		../WordLadder/lib/StanfordCPPLib/set.h \
+		../WordLadder/lib/StanfordCPPLib/map.h \
+		../WordLadder/lib/StanfordCPPLib/simpio.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\wordladder.o ..\WordLadder\src\wordladder.cpp
 
 debug/basicgraph.o: ../WordLadder/lib/StanfordCPPLib/basicgraph.cpp ../WordLadder/lib/StanfordCPPLib/basicgraph.h \

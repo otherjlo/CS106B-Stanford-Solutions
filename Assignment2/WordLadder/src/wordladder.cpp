@@ -21,7 +21,7 @@ void createDictionary();
 void playWordLadder();
 void readUserInput(string &firstword, string &secondword);
 void findWordLadder(string &firstword, string &secondword);
-void getNeighbors(string &word, Vector<string> &neighbors, Set<string> &usedWords);
+Vector<string> getNeighbors(string &word, Set<string> &usedWords);
 void printLadder(Stack<string> &ladder);
 
 using namespace std;
@@ -69,6 +69,9 @@ void createDictionary() {
     }
 }
 
+/**
+ * @brief playWordLadder Plays word ladder until user enters "enter
+ */
 void playWordLadder() {
     string firstword, secondword;
     while(true) {
@@ -116,48 +119,73 @@ void readUserInput(string &firstword, string &secondword) {
     }
 }
 
+/**
+ * @brief findWordLadder Uses breadth first search algorithm to find a word ladder
+ * @param firstword Word that will lead to other word
+ * @param secondword Word to be found
+ */
 void findWordLadder(string &firstword, string &secondword) {
+    //Setup simple data structures
     Queue<Stack<string> > ladderQueue;
-    Stack<string> origLadder, currLadder;
+    Stack<string> currLadder, tempLadder;
     Set<string> usedWords;
-    string currWord;
+    string currWord, tempWord;
     Vector<string> neighbors;
 
-    origLadder.push(firstword);
-    ladderQueue.enqueue(origLadder);
+    //Set up first ladder, push first word to it
+    currLadder.push(firstword);
+    ladderQueue.enqueue(currLadder);
     usedWords.add(firstword);
 
+    //While a ladder still exists
     while(!ladderQueue.isEmpty()) {
+        //Take off top ladder, and get top word off of it
         currLadder = ladderQueue.dequeue();
         currWord = currLadder.peek();
-        getNeighbors(currWord, neighbors, usedWords);
-
+        //Find all neighbors of the currWord
+        neighbors = getNeighbors(currWord, usedWords);
+       //Go through each neighbor word, and check if it is the secondword
         for(int index = 0; index < neighbors.size(); index++) {
-            string tempword = neighbors[index];
-                if(tempword == secondword) {
-                    //Print ladder, and exit method entirely
-                    currLadder.push(tempword);
-                    cout<<"A ladder from "<<secondword<<" back to "<<firstword<<":"<<endl;
-                    printLadder(currLadder);
-                    return;
-                }
-                else {
-                    Stack<string> templadder = currLadder;
-                    templadder.push(tempword);
-                    ladderQueue.enqueue(templadder);
-                }
+            tempWord = neighbors.get(index);
+
+            if(tempWord == secondword) {
+                //Push the final word to the final ladder
+                currLadder.push(tempWord);
+                cout<<"A ladder from "<<secondword<<" back to "<<firstword<<":"<<endl;
+                //Print ladder, exit method
+                printLadder(currLadder);
+                return;
+            }
+            //Neighbor is not final word
+            else {
+                //Copy current ladder to a temp one, and push the word to the temp ladder
+                tempLadder = currLadder;
+                tempLadder.push(tempWord);
+                //Add the new ladder to the queue(ladderQueue)
+                ladderQueue.enqueue(tempLadder);
             }
         }
-    cout<<"No word ladder found from "<<secondword<<" back to "<<firstword<<".";
+    }
+    //No ladder found
+    cout<<"No word ladder found from "<<secondword<<" back to "<<firstword<<"."<<endl;
 }
 
-
-void getNeighbors(string &word, Vector<string> &neighbors, Set<string> &usedWords) {
+/**
+ * @brief getNeighbors Returns a vector holding all valid english words with one letter changed from passed word
+ * @param word Word to have its neighbors found
+ * @param usedWords A set of words that have already been used in all ladders
+ * @return A vector holding all neigbors of the passed word
+ */
+Vector<string> getNeighbors(string &word, Set<string> &usedWords) {
+    Vector<string> neighbors;
+   //For each letter in word, change the letter
     for(int index = 0; index < word.size(); index++) {
-        for(char letter = 'a'; letter < 'z'; letter++) {
+        for(char letter = 'a'; letter <= 'z'; letter++) {
+            //Make sure the lettersd are not the same
             if(word[index] != letter) {
                 string changedword = word;
                 changedword[index] = letter;
+               //if word has not been used, and is in the dictionary, is true
                 if(dictionary.contains(changedword) && !usedWords.contains(changedword)) {
                     neighbors.add(changedword);
                     usedWords.add(changedword);
@@ -165,6 +193,7 @@ void getNeighbors(string &word, Vector<string> &neighbors, Set<string> &usedWord
             }
         }
     }
+    return neighbors;
 }
 
 /**
