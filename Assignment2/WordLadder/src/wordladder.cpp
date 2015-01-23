@@ -167,7 +167,7 @@ void findWordLadder(string &firstword, string &secondword) {
         }
     }
     //No ladder found
-    cout<<"No word ladder found from "<<secondword<<" back to "<<firstword<<"."<<endl;
+    cout<<"No word ladder found from "<<secondword<<" back to "<<firstword<<"."<<endl<<endl;
 }
 
 /**
