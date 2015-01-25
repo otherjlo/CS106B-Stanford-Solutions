@@ -188,7 +188,7 @@ int getNumWords(int nVal) {
             return numWords;
         }
         else {
-            cout<<"Number of words must be greater than value of N!"<<endl;
+            cout<<"Must be at least "<<nVal<<" words."<<endl;
         }
     }
 }
