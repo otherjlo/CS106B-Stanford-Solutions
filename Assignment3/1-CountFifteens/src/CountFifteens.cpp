@@ -22,7 +22,7 @@ using namespace std;
 /* Function prototypes */
 
 int countFifteens(Vector<Card> & cards);
-
+int countFifteenCombos(Vector<Card> &cards, int count);
 /*
  * Main program
  * ------------
@@ -54,6 +54,35 @@ int main() {
  */
 
 int countFifteens(Vector<Card> & cards) {
-   // [TODO: Fill this in]
-   return 0;
+    return countFifteenCombos(cards, 0);
+}
+
+/**
+ * @brief countFifteenCombos Count the number of ways to make 15 from a hand of cards
+ * @param cards the hand used
+ * @param count The initial value of the first card
+ * @return Number of ways to make 15
+ */
+int countFifteenCombos(Vector<Card> &cards, int count) {
+    //Base Case : Passed over 15, no need to continue
+    if(count > 15) return 0;
+    //Base Case : Rwached 15, found a solution, return 1 to the combos
+    else if(count == 15) return 1;
+
+    int nCombos = 0, combos;
+    //Iterate through each remaining card, if none, we reached another "base case", and we just skip over and return 0
+    for(int i = 0; i < cards.size(); i++) {
+        //Get the card at i, and create a temp vector holding all the ones after
+        Card currCard = cards.get(i);
+        Vector<Card> temp = cards.subList(i + 1, cards.size() - i - 1);
+        //Change Q, J, or K to value 10 if we receive it
+        int cardValue = currCard.getRank() > 10 ? 10 : currCard.getRank();
+        count += cardValue;
+        //Recur, with the next card after i being in front
+        int combos = countFifteenCombos(temp, count);
+        nCombos += combos;
+        //Undo changes to count, so we act like we never had the old cards value we just used
+        count -= cardValue;
+    }
+    return nCombos;
 }
