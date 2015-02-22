@@ -17,11 +17,13 @@ using namespace std;
 
 /* Function prototypes */
 
-void listCompletions(string digits, Lexicon & lex);
+void listCompletions(string digits, Lexicon & lex, Vector<string> &possibleWords);
 void findAllCombos(string digits, string soFar, Lexicon &lexicon, Vector<string> &allWords);
 string digitToString(char digit);
 void findAllEndings(string prefix, Lexicon &lexicon, Vector<string> &allWords);
 bool hasAnotherWord(string prefix, Lexicon &lexicon);
+void printWords(Vector<string> &words);
+
 /* Main program */
 
 int main() {
@@ -32,7 +34,8 @@ int main() {
       string digits = getLine();
       if (digits == "" || digits == "quit") break;
       cout << "The words beginning with those digits are:" << endl;
-      listCompletions(digits, english);
+      Vector<string> possibleWords;
+      listCompletions(digits, english, possibleWords);
    }
    return 0;
 }
@@ -45,19 +48,15 @@ int main() {
  * corresponding to the specified digits on a telephone keypad.
  */
 
-void listCompletions(string digits, Lexicon & lexicon) {
-   Vector<string> foundWords;
-   findAllCombos(digits, "", lexicon, foundWords);
-   //Iterate and print each word
-   for(string word : foundWords) {
-       cout<<word<<endl;
-   }
+void listCompletions(string digits, Lexicon & lexicon, Vector<string> &possibleWords) {
+   findAllCombos(digits, "", lexicon, possibleWords);
+   printWords(possibleWords);
 }
 
 /*
  * Function: findAllCombos
  * Usage: findALlCombos(digits, soFar, lexicon, allWords);
- * ---------------------------------------------
+ * -------------------------------------------------------
  * Finds all words that could be made using a multitap phone
  */
 void findAllCombos(string digits, string soFar, Lexicon &lexicon, Vector<string> &allWords) {
@@ -116,14 +115,13 @@ string digitToString(char digit) {
 /*
  * Function: findAllEndings
  * Usage: findAllEndings(prefix, lexicon, allWords);
- * ----------------------------------------
+ * -------------------------------------------------
  * Prints out each word that could be made from one prefix
  */
 void findAllEndings(string prefix, Lexicon &lexicon, Vector<string> &allWords) {
-    //Base Case : Word found. If it is not a prefix of another word, such as (palisade and palisaded) return
+    //Add word if found
     if(lexicon.contains(prefix)) {
         allWords.add(prefix);
-        if(!hasAnotherWord(prefix, lexicon)) return;
     }
     //Base Case: Prefix is not in lexicon
     if(!lexicon.containsPrefix(prefix)) return;
@@ -138,18 +136,11 @@ void findAllEndings(string prefix, Lexicon &lexicon, Vector<string> &allWords) {
 }
 
 /*
- * Function: hasAnotherWord
- * Usage: hasAnotherWord(prefix, lexicon);
- * ---------------------------------------
- * If a lexicon has a word that begins with the prefix + another letter, return true
+ * Function: printWords
+ * Usage: printWords(words);
+ * -------------------------
+ * Iterates through a Vector of strings and prints each one
  */
-bool hasAnotherWord(string prefix, Lexicon &lexicon) {
-    //See if adding any other letter is a prefix for another, longer word
-    for(char ch = 'a'; ch <= 'z'; ch++) {
-        //Add the letter, check if it is a prefix in the lexicon, then remove it
-        prefix += ch;
-        if(lexicon.containsPrefix(prefix)) return true;
-        prefix.pop_back();
-    }
-    return false;
+void printWords(Vector<string> &words) {
+    for(string word : words) cout<<word<<endl;
 }
