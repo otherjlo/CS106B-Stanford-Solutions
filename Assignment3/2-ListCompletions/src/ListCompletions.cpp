@@ -24,8 +24,6 @@ void findAllEndings(string prefix, Lexicon &lexicon, Vector<string> &allWords);
 bool hasAnotherWord(string prefix, Lexicon &lexicon);
 /* Main program */
 
-/* Instance Variables */
-Vector<string> combinations;
 int main() {
    Lexicon english("EnglishWords.dat");
    cout << "Cell phone mind-reading problem" << endl;
