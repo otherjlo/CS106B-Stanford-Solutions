@@ -71,9 +71,9 @@ Vector<int> getSortedVector(Vector<int> &requests) {
  * @param count parameter to keep count of amount of pipes used
  */
 void cutStockRec(Vector<int> &requests, int stockLength, int remaining, int &count) {
-    //One pipe remaining. no matter what, it has to increment, since it either created a full pipe, or has to become it's own pipe
-    if(requests.size() == 1) {
-        count++;
+    //No pipes remaining. If we passed the remainder of a pipe, that means we had no left over. else, we need to increment to account for it
+    if(requests.isEmpty()) {
+        if(remaining != stockLength) count++;
         return;
     }
 
