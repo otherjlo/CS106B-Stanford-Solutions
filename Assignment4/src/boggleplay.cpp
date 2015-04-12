@@ -5,8 +5,9 @@
 // TODO: remove this comment header
 
 #include "lexicon.h"
-
+#include "Boggle.h"
 void playOneGame(Lexicon& dictionary) {
-    // TODO: implement
+    Boggle game(dictionary, "");
+    cout<<game;
 
 }

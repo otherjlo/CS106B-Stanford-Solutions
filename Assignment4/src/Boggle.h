@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include "lexicon.h"
+#include "grid.h"
 using namespace std;
 
 class Boggle {
@@ -21,11 +22,14 @@ public:
     int humanScore();
     Set<string> computerWordSearch();
     int getScoreComputer();
+    int boardSize();
 
     // TODO: add any other member functions/variables necessary
 
 private:
-    // TODO: add any other member functions/variables necessary
+    Grid<char> board;
+    Grid<char> createRandomBoard();
+    char randomChar(int index, string (&cubes)[16]);
 };
 
 ostream& operator<<(ostream& out, Boggle& boggle);

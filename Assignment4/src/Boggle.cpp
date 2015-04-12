@@ -5,6 +5,9 @@
 // TODO: remove this comment header
 
 #include "Boggle.h"
+#include "shuffle.h"
+#include "random.h"
+#include <cmath>
 
 // letters on all 6 sides of every cube
 static string CUBES[16] = {
@@ -23,14 +26,14 @@ static string BIG_BOGGLE_CUBES[25] = {
    "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"
 };
 
+Grid<char> board;
 Boggle::Boggle(Lexicon& dictionary, string boardText) {
-    // TODO: implement
+    if(boardText == "") board = createRandomBoard();
 
 }
 
 char Boggle::getLetter(int row, int col) {
-    // TODO: implement
-    return '?';   // remove this
+    return board.get(row, col);
 }
 
 bool Boggle::checkWord(string word) {
@@ -60,6 +63,36 @@ int Boggle::getScoreComputer() {
 }
 
 ostream& operator<<(ostream& out, Boggle& boggle) {
-    // TODO: implement
+    for(int row = 0; row < sqrt(boggle.boardSize()); row++) {
+        for(int col = 0; col < sqrt(boggle.boardSize()); col++) {
+            out<< boggle.getLetter(row, col);
+        }
+        out<<endl;
+    }
     return out;
+}
+
+Grid<char> Boggle::createRandomBoard() {
+    Grid<char> random(4, 4);
+    string shuffled[16] = CUBES;
+    shuffle(shuffled, 16);
+    int currIndex = 0;
+    for(int row = 0; row < random.numRows(); row++) {
+        for(int column = 0; column < random.numCols(); column++) {
+            random.set(row, column, randomChar(currIndex, shuffled));
+            currIndex++;
+        }
+    }
+    return random;
+}
+
+char Boggle::randomChar(int index, string (&cubes)[16]) {
+    string cube = cubes[index];
+    string shuffledCube = shuffle(cube);
+    int randIndex = randomInteger(0, shuffledCube.length() - 1);
+    return shuffledCube[randIndex];
+}
+
+int Boggle::boardSize() {
+    return board.numRows() * board.numCols();
 }
