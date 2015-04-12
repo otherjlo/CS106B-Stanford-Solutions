@@ -29,7 +29,7 @@ static string BIG_BOGGLE_CUBES[25] = {
 Grid<char> board;
 Boggle::Boggle(Lexicon& dictionary, string boardText) {
     if(boardText == "") board = createRandomBoard();
-
+    else board = createBoard(boardText);
 }
 
 char Boggle::getLetter(int row, int col) {
@@ -88,9 +88,22 @@ Grid<char> Boggle::createRandomBoard() {
 
 char Boggle::randomChar(int index, string (&cubes)[16]) {
     string cube = cubes[index];
+   //Shuffle and then pick random side
     string shuffledCube = shuffle(cube);
     int randIndex = randomInteger(0, shuffledCube.length() - 1);
     return shuffledCube[randIndex];
+}
+
+Grid<char> Boggle::createBoard(string cubefaces) {
+    Grid<char> board(4, 4);
+    int currIndex = 0;
+    for(int row = 0; row < board.numRows(); row++) {
+        for(int col = 0; col < board.numCols(); col++) {
+            board.set(row, col, cubefaces[currIndex]);
+            currIndex++;
+        }
+    }
+    return board;
 }
 
 int Boggle::boardSize() {

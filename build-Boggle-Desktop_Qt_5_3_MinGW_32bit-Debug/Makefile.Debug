@@ -249,9 +249,7 @@ debug/boggleplay.o: ../Assignment4/src/boggleplay.cpp ../Assignment4/lib/Stanfor
 		../Assignment4/lib/StanfordCPPLib/stack.h \
 		../Assignment4/lib/StanfordCPPLib/vector.h \
 		../Assignment4/lib/StanfordCPPLib/random.h \
-		../Assignment4/lib/StanfordCPPLib/strlib.h \
-		../Assignment4/src/Boggle.h \
-		../Assignment4/lib/StanfordCPPLib/grid.h
+		../Assignment4/lib/StanfordCPPLib/strlib.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\boggleplay.o ..\Assignment4\src\boggleplay.cpp
 
 debug/basicgraph.o: ../Assignment4/lib/StanfordCPPLib/basicgraph.cpp ../Assignment4/lib/StanfordCPPLib/basicgraph.h \

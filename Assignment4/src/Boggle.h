@@ -30,6 +30,7 @@ private:
     Grid<char> board;
     Grid<char> createRandomBoard();
     char randomChar(int index, string (&cubes)[16]);
+    Grid<char> createBoard(string cubefaces);
 };
 
 ostream& operator<<(ostream& out, Boggle& boggle);
