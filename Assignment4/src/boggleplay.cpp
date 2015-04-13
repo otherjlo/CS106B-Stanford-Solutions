@@ -7,6 +7,6 @@
 #include "lexicon.h"
 #include "Boggle.h"
 void playOneGame(Lexicon& dictionary) {
-    Boggle game(dictionary, "abcdefghjkiopteq");
+    Boggle game(dictionary, "");
        cout<<game;
 }

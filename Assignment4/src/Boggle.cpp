@@ -26,19 +26,18 @@ static string BIG_BOGGLE_CUBES[25] = {
    "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"
 };
 
-Grid<char> board;
 Boggle::Boggle(Lexicon& dictionary, string boardText) {
-    if(boardText == "") board = createRandomBoard();
-    else board = createBoard(boardText);
+    Boggle::dict = dictionary;
+    if(boardText == "") Boggle::board = createRandomBoard();
+    else Boggle::board = createBoard(boardText);
 }
 
 char Boggle::getLetter(int row, int col) {
-    return board.get(row, col);
+    return Boggle::board.get(row, col);
 }
 
 bool Boggle::checkWord(string word) {
-    // TODO: implement
-    return false;   // remove this
+    return (Boggle::dict.contains(word) && Boggle::humanWords.contains(word) && word.length() >=4);
 }
 
 bool Boggle::humanWordSearch(string word) {
@@ -79,6 +78,7 @@ Grid<char> Boggle::createRandomBoard() {
     int currIndex = 0;
     for(int row = 0; row < random.numRows(); row++) {
         for(int column = 0; column < random.numCols(); column++) {
+            //for each die on board, set it to a random letter from the current die
             random.set(row, column, randomChar(currIndex, shuffled));
             currIndex++;
         }
@@ -95,10 +95,11 @@ char Boggle::randomChar(int index, string (&cubes)[16]) {
 }
 
 Grid<char> Boggle::createBoard(string cubefaces) {
-    Grid<char> board(4, 4);
+    Grid<char> board(4,4);
     int currIndex = 0;
     for(int row = 0; row < board.numRows(); row++) {
         for(int col = 0; col < board.numCols(); col++) {
+            //for each die on board, set it to the currIndex in passed string
             board.set(row, col, cubefaces[currIndex]);
             currIndex++;
         }
@@ -107,5 +108,5 @@ Grid<char> Boggle::createBoard(string cubefaces) {
 }
 
 int Boggle::boardSize() {
-    return board.numRows() * board.numCols();
+    return Boggle::board.numRows() * Boggle::board.numCols();
 }

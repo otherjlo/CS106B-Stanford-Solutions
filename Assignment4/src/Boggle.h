@@ -11,8 +11,12 @@
 #include <string>
 #include "lexicon.h"
 #include "grid.h"
+#include "set.h"
 using namespace std;
 
+struct dieLocation {
+    int row, column;
+};
 class Boggle {
 public:
     Boggle(Lexicon& dictionary, string boardText = "");
@@ -28,6 +32,8 @@ public:
 
 private:
     Grid<char> board;
+    Set<string> humanWords;
+    Lexicon dict;
     Grid<char> createRandomBoard();
     char randomChar(int index, string (&cubes)[16]);
     Grid<char> createBoard(string cubefaces);
