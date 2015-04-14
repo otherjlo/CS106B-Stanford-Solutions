@@ -14,12 +14,16 @@
 #include "set.h"
 using namespace std;
 
-struct dieLocation {
+typedef struct dieLocation {
     int row, column;
-};
+    bool operator <(const dieLocation &d2) const {
+        return row + column < d2.row + d2. column;
+    }
+}dieLocation;
+
 class Boggle {
 public:
-    Boggle(Lexicon& dictionary, string boardText = "");
+    Boggle(Lexicon& dictionary, string boardText);
     char getLetter(int row, int col);
     bool checkWord(string word);
     bool humanWordSearch(string word);
@@ -34,9 +38,11 @@ private:
     Grid<char> board;
     Set<string> humanWords;
     Lexicon dict;
+    int playerScore, computerScore;
     Grid<char> createRandomBoard();
     char randomChar(int index, string (&cubes)[16]);
     Grid<char> createBoard(string cubefaces);
+    Set<dieLocation> getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie);
 };
 
 ostream& operator<<(ostream& out, Boggle& boggle);

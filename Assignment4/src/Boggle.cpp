@@ -8,6 +8,7 @@
 #include "shuffle.h"
 #include "random.h"
 #include <cmath>
+#include "set.h"
 
 // letters on all 6 sides of every cube
 static string CUBES[16] = {
@@ -30,6 +31,8 @@ Boggle::Boggle(Lexicon& dictionary, string boardText) {
     Boggle::dict = dictionary;
     if(boardText == "") Boggle::board = createRandomBoard();
     else Boggle::board = createBoard(boardText);
+    Boggle::playerScore = 0;
+    Boggle::computerScore = 0;
 }
 
 char Boggle::getLetter(int row, int col) {
@@ -46,8 +49,7 @@ bool Boggle::humanWordSearch(string word) {
 }
 
 int Boggle::humanScore() {
-    // TODO: implement
-    return 0;   // remove this
+    return Boggle::playerScore;
 }
 
 Set<string> Boggle::computerWordSearch() {
@@ -57,8 +59,7 @@ Set<string> Boggle::computerWordSearch() {
 }
 
 int Boggle::getScoreComputer() {
-    // TODO: implement
-    return 0;   // remove this
+    return Boggle::computerScore;
 }
 
 ostream& operator<<(ostream& out, Boggle& boggle) {
@@ -109,4 +110,25 @@ Grid<char> Boggle::createBoard(string cubefaces) {
 
 int Boggle::boardSize() {
     return Boggle::board.numRows() * Boggle::board.numCols();
+}
+
+Set<dieLocation> Boggle::getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie) {
+    int row = currentDie.row;
+    int column = currentDie.column;
+    Set<dieLocation> neighbors;
+    for(int currRow = row - 1; currRow < row + 1; currRow++) {
+        for(int currCol = column - 1; currCol < column + 1; currCol++) {
+            //if neighbor is in bounds, get its row and column.
+              if(markedLocations.inBounds(currRow, currCol)) {
+              //if neighbor is unmarked, add it to the  neighbors set
+                  if(markedLocations.get(currRow, currCol)) {
+                    dieLocation neighbor;
+                    neighbor.row = currRow;
+                    neighbor.column = currCol;
+                    neighbors.add(neighbor);
+                  }
+            }
+        }
+    }
+    return neighbors;
 }
