@@ -12,6 +12,7 @@
 #include "lexicon.h"
 #include "grid.h"
 #include "set.h"
+#include "vector.h"
 using namespace std;
 
 typedef struct dieLocation {
@@ -37,12 +38,15 @@ public:
 private:
     Grid<char> board;
     Set<string> humanWords;
-    Lexicon dict;
+    Lexicon* dict;
     int playerScore, computerScore;
+    Vector<dieLocation> lastHumanWord;
     Grid<char> createRandomBoard();
     char randomChar(int index, string (&cubes)[16]);
     Grid<char> createBoard(string cubefaces);
+    bool humanWordSearchRecursive(string word, string copy, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie);
     Set<dieLocation> getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie);
+    Set<dieLocation> findUnmarkedLetterLocations(char letter, Grid<bool> &markedLocations);
 };
 
 ostream& operator<<(ostream& out, Boggle& boggle);

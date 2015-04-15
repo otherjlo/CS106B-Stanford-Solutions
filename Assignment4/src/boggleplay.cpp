@@ -7,6 +7,7 @@
 #include "lexicon.h"
 #include "Boggle.h"
 void playOneGame(Lexicon& dictionary) {
-    Boggle game = Boggle(dictionary, "");
+    Boggle game = Boggle(dictionary, "notepiaqzzsqrtye");
     cout<<game;
+    cout<<game.humanWordSearch("pizzas");
 }

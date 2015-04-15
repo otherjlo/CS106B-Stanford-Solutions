@@ -28,7 +28,7 @@ static string BIG_BOGGLE_CUBES[25] = {
 };
 
 Boggle::Boggle(Lexicon& dictionary, string boardText) {
-    Boggle::dict = dictionary;
+    Boggle::dict = &dictionary;
     if(boardText == "") Boggle::board = createRandomBoard();
     else Boggle::board = createBoard(boardText);
     Boggle::playerScore = 0;
@@ -40,12 +40,15 @@ char Boggle::getLetter(int row, int col) {
 }
 
 bool Boggle::checkWord(string word) {
-    return (Boggle::dict.contains(word) && Boggle::humanWords.contains(word) && word.length() >=4);
+    return (Boggle::dict->contains(word) && !Boggle::humanWords.contains(word) && word.length() >=4);
 }
 
 bool Boggle::humanWordSearch(string word) {
-    // TODO: implement
-    return false;   // remove this
+    string copy;
+    Grid<bool> markedLocations(board.numRows(), board.numCols());
+    markedLocations.fill(false);
+    dieLocation filler;
+    return humanWordSearchRecursive(word, copy, 0, markedLocations, filler);
 }
 
 int Boggle::humanScore() {
@@ -112,6 +115,37 @@ int Boggle::boardSize() {
     return Boggle::board.numRows() * Boggle::board.numCols();
 }
 
+bool Boggle::humanWordSearchRecursive(string word, string copy, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie) {
+    //If word exists and hasn't been used, and it is the full word, add it to used words, and return true
+    if(checkWord(copy) && copy.size() == word.size()) {
+        humanWords.add(copy);
+        return true;
+    }
+    //if word is not a prefix(doesn't exist) or we reached one past end of word, we failed, and return false
+    if(!Boggle::dict->containsPrefix(copy) || letterIndex == word.size()) {
+        return false;
+    }
+
+    copy += word[letterIndex];
+    Set<dieLocation> neighbors;
+    //first layer of recursion
+    if(letterIndex == 0) neighbors = findUnmarkedLetterLocations(word[0], markedLocations);
+    else neighbors = getUnmarkedNeighbors(markedLocations, currDie);
+
+    for(dieLocation currNeighbor : neighbors) {
+        //Add it to last word for later, and mark the dieLocation as true
+        lastHumanWord.add(currNeighbor);
+        markedLocations.set(currNeighbor.row, currNeighbor.column, true);
+        if(humanWordSearchRecursive(word, copy, ++letterIndex, markedLocations, currNeighbor)) return true;
+        //failed, so must backtrack and reset
+        lastHumanWord.remove(letterIndex);
+        markedLocations.set(currNeighbor.row, currNeighbor.column, false);
+    }
+    //all neighbors failed, return false
+    return false;
+}
+
+
 Set<dieLocation> Boggle::getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie) {
     int row = currentDie.row;
     int column = currentDie.column;
@@ -131,4 +165,18 @@ Set<dieLocation> Boggle::getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLo
         }
     }
     return neighbors;
+}
+
+Set<dieLocation> Boggle::findUnmarkedLetterLocations(char letter, Grid<bool> &markedLocations) {
+    Set<dieLocation> found;
+    for(int row = 0; row < sqrt(boardSize()); row++) {
+        for(int col = 0; col < sqrt(boardSize()); col++) {
+            if(getLetter(row, col) == letter && !markedLocations.get(row, col)) {
+                dieLocation loc;
+                loc.row = row; loc.column = col;
+                found.add(loc);
+            }
+        }
+    }
+    return found;
 }
