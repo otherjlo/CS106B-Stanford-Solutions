@@ -56,13 +56,44 @@ int Boggle::humanScore() {
 }
 
 Set<string> Boggle::computerWordSearch() {
-    // TODO: implement
-    Set<string> result;   // remove this
-    return result;        // remove this
+    Set<string> computerWords;
+    Grid<bool> markedLocations(board.numRows(), board.numCols());
+    markedLocations.fill(false);
+    dieLocation filler;
+    computerWordSearchRecursive(computerWords, markedLocations, "", filler);
+    return computerWords;
 }
 
 int Boggle::getScoreComputer() {
     return Boggle::computerScore;
+}
+
+void Boggle::computerWordSearchRecursive(Set<string> &foundWords, Grid<bool> &markedLocations, string currWord, dieLocation currDie) {
+    //found a word, add it
+    if(checkWord(currWord)) {
+        foundWords.add(currWord);
+    }
+    //Either the word won't work, or we reached the max
+    if(!dict->containsPrefix(currWord) || currWord.size() == boardSize()) {
+        if(currWord.size() != 0) {
+            return;
+        }
+    }
+    Set<dieLocation> neighbors;
+    if(currWord == "") {
+        neighbors = boardAsSet();
+    }
+    else {
+        neighbors = getUnmarkedNeighbors(markedLocations, currDie);
+    }
+
+    for(dieLocation currNeighbor : neighbors) {
+        currWord += board.get(currNeighbor.row, currNeighbor.column);
+        markedLocations.set(currNeighbor.row, currNeighbor.column, true);
+        computerWordSearchRecursive(foundWords, markedLocations, currWord, currNeighbor);
+        currWord.pop_back();
+        markedLocations.set(currNeighbor.row, currNeighbor.column, false);
+    }
 }
 
 ostream& operator<<(ostream& out, Boggle& boggle) {
@@ -83,7 +114,7 @@ Grid<char> Boggle::createRandomBoard() {
     for(int row = 0; row < random.numRows(); row++) {
         for(int column = 0; column < random.numCols(); column++) {
             //for each die on board, set it to a random letter from the current die
-            random.set(row, column, randomChar(currIndex, shuffled));
+            random.set(row, column, randomChar(currIndex %16, shuffled));
             currIndex++;
         }
     }
@@ -138,7 +169,7 @@ bool Boggle::humanWordSearchRecursive(string word, string copy, int letterIndex,
         markedLocations.set(currNeighbor.row, currNeighbor.column, true);
         if(humanWordSearchRecursive(word, copy, ++letterIndex, markedLocations, currNeighbor)) return true;
         //failed, so must backtrack and reset
-        lastHumanWord.remove(letterIndex);
+        lastHumanWord.remove(lastHumanWord.size() - 1);
         markedLocations.set(currNeighbor.row, currNeighbor.column, false);
     }
     //all neighbors failed, return false
@@ -150,12 +181,13 @@ Set<dieLocation> Boggle::getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLo
     int row = currentDie.row;
     int column = currentDie.column;
     Set<dieLocation> neighbors;
-    for(int currRow = row - 1; currRow < row + 1; currRow++) {
-        for(int currCol = column - 1; currCol < column + 1; currCol++) {
+    for(int currRow = row - 1; currRow <= row + 1; currRow++) {
+        for(int currCol = column - 1; currCol <= column + 1; currCol++) {
+            if(currRow == row && currCol == column) continue;
             //if neighbor is in bounds, get its row and column.
               if(markedLocations.inBounds(currRow, currCol)) {
               //if neighbor is unmarked, add it to the  neighbors set
-                  if(markedLocations.get(currRow, currCol)) {
+                  if(!markedLocations.get(currRow, currCol)) {
                     dieLocation neighbor;
                     neighbor.row = currRow;
                     neighbor.column = currCol;
@@ -169,8 +201,8 @@ Set<dieLocation> Boggle::getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLo
 
 Set<dieLocation> Boggle::findUnmarkedLetterLocations(char letter, Grid<bool> &markedLocations) {
     Set<dieLocation> found;
-    for(int row = 0; row < sqrt(boardSize()); row++) {
-        for(int col = 0; col < sqrt(boardSize()); col++) {
+    for(int row = 0; row < board.numRows(); row++) {
+        for(int col = 0; col < board.numCols(); col++) {
             if(getLetter(row, col) == letter && !markedLocations.get(row, col)) {
                 dieLocation loc;
                 loc.row = row; loc.column = col;
@@ -180,3 +212,18 @@ Set<dieLocation> Boggle::findUnmarkedLetterLocations(char letter, Grid<bool> &ma
     }
     return found;
 }
+
+Set<dieLocation> Boggle::boardAsSet() {
+    Set<dieLocation> boardSet;
+    for(int row = 0; row < board.numRows(); row++) {
+        for(int col = 0; col < board.numCols(); col++) {
+            dieLocation newLoc;
+            newLoc.row = row;
+            newLoc.column = col;
+            boardSet.add(newLoc);
+        }
+    }
+    return boardSet;
+}
+
+

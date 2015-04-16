@@ -18,7 +18,7 @@ using namespace std;
 typedef struct dieLocation {
     int row, column;
     bool operator <(const dieLocation &d2) const {
-        return row + column < d2.row + d2. column;
+        return row < d2.row ? true : column < d2.column;
     }
 }dieLocation;
 
@@ -47,6 +47,8 @@ private:
     bool humanWordSearchRecursive(string word, string copy, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie);
     Set<dieLocation> getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie);
     Set<dieLocation> findUnmarkedLetterLocations(char letter, Grid<bool> &markedLocations);
+    Set<dieLocation> boardAsSet();
+    void computerWordSearchRecursive(Set<string> &foundWords, Grid<bool> &markedLocations, string currWord, dieLocation currDie);
 };
 
 ostream& operator<<(ostream& out, Boggle& boggle);
