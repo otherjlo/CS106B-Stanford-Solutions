@@ -32,6 +32,8 @@ public:
     Set<string> computerWordSearch();
     int getScoreComputer();
     int boardSize();
+    Set<dieLocation> getLastHighlighted();
+    Set<string> getPlayerWords();
 
     // TODO: add any other member functions/variables necessary
 
@@ -40,13 +42,12 @@ private:
     Set<string> humanWords;
     Lexicon* dict;
     int playerScore, computerScore;
-    Vector<dieLocation> lastHumanWord;
+    Set<dieLocation> lastHumanWord;
     Grid<char> createRandomBoard();
     char randomChar(int index, string (&cubes)[16]);
     Grid<char> createBoard(string cubefaces);
     bool humanWordSearchRecursive(string word, string copy, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie);
     Set<dieLocation> getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie);
-    Set<dieLocation> findUnmarkedLetterLocations(char letter, Grid<bool> &markedLocations);
     Set<dieLocation> boardAsSet();
     void computerWordSearchRecursive(Set<string> &foundWords, Grid<bool> &markedLocations, string currWord, dieLocation currDie);
 };
