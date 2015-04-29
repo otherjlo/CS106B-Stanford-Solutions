@@ -12,6 +12,7 @@
 #include "lexicon.h"
 #include "grid.h"
 #include "set.h"
+#include "queue.h"
 #include "vector.h"
 using namespace std;
 
@@ -32,7 +33,7 @@ public:
     Set<string> computerWordSearch();
     int getScoreComputer();
     int boardSize();
-    Set<dieLocation> getLastHighlighted();
+    Queue<dieLocation> getLastHighlighted();
     Set<string> getPlayerWords();
 
     // TODO: add any other member functions/variables necessary
@@ -42,14 +43,15 @@ private:
     Set<string> humanWords;
     Lexicon* dict;
     int playerScore, computerScore;
-    Set<dieLocation> lastHumanWord;
+    Queue<dieLocation> lastHumanWord;
     Grid<char> createRandomBoard();
     char randomChar(int index, string (&cubes)[16]);
     Grid<char> createBoard(string cubefaces);
-    bool humanWordSearchRecursive(string word, string copy, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie);
+    bool humanWordSearchRecursive(string word, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie);
     Set<dieLocation> getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie);
     Set<dieLocation> boardAsSet();
     void computerWordSearchRecursive(Set<string> &foundWords, Grid<bool> &markedLocations, string currWord, dieLocation currDie);
+    void addToScore(int amount, bool player);
 };
 
 ostream& operator<<(ostream& out, Boggle& boggle);

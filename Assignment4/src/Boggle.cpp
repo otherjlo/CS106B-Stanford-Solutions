@@ -44,12 +44,18 @@ bool Boggle::checkWord(string word) {
 }
 
 bool Boggle::humanWordSearch(string word) {
-    if(!checkWord(word)) return false;
     word = toUpperCase(word);
+    if(!checkWord(word)) return false;
     Grid<bool> markedLocations(board.numRows(), board.numCols());
     markedLocations.fill(false);
     dieLocation filler;
-    return humanWordSearchRecursive(word, "", 0, markedLocations, filler);
+    lastHumanWord.clear();
+    if(humanWordSearchRecursive(word, 0, markedLocations, filler)) {
+        humanWords.add(word);
+        addToScore(word.size() - 3, true);
+        return true;
+    }
+    return false;
 }
 
 int Boggle::humanScore() {
@@ -73,7 +79,8 @@ void Boggle::computerWordSearchRecursive(Set<string> &foundWords, Grid<bool> &ma
     //found a word, add it
     if(checkWord(currWord)) {
         foundWords.add(toUpperCase(currWord));
-        Boggle::computerScore += currWord.size() - 3;
+        addToScore(currWord.size() - 3, false);
+
     }
     //Either the word won't work, or we reached the max
     if(!dict->containsPrefix(currWord) || currWord.size() == boardSize()) {
@@ -152,29 +159,24 @@ Set<string> Boggle::getPlayerWords() {
     return Boggle::humanWords;
 }
 
-bool Boggle::humanWordSearchRecursive(string word, string copy, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie) {
-    //If word exists and hasn't been used, and it is the full word, add it to used words, and return true
-    if(word.empty() && checkWord(copy)) {
-        humanWords.add(toUpperCase(copy));
-        Boggle::playerScore += copy.size() - 3;
-        return true;
-    }
+bool Boggle::humanWordSearchRecursive(string word, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie) {
+    //We found the word, so return true
+    if(word.empty())return true;
 
     Set<dieLocation> neighbors;
+    //First layer of recursion
     if(letterIndex == 0) neighbors = boardAsSet();
-    else {
-        neighbors = getUnmarkedNeighbors(markedLocations, currDie);
-    }
+    else neighbors = getUnmarkedNeighbors(markedLocations, currDie);
 
     for(dieLocation neighbor : neighbors) {
+        //if any neighbors are the next letter in the word, go deeper into the recursion
         if(word[0] == getLetter(neighbor.row, neighbor.column)) {
             markedLocations.set(neighbor.row, neighbor.column, true);
-            copy += word[0];
-            lastHumanWord.add(neighbor);
-            if(humanWordSearchRecursive(word.substr(1, string::npos), copy, letterIndex + 1, markedLocations, neighbor)) return true;
+            lastHumanWord.enqueue(neighbor);
+            if(humanWordSearchRecursive(word.substr(1, string::npos), letterIndex + 1, markedLocations, neighbor)) return true;
+            //Failed, so backtrack
             markedLocations.set(neighbor.row, neighbor.column, false);
-            copy.pop_back();
-            lastHumanWord.remove(neighbor);
+            lastHumanWord.dequeue();
         }
     }
     return false;
@@ -215,6 +217,11 @@ Set<dieLocation> Boggle::boardAsSet() {
     return boardSet;
 }
 
-Set<dieLocation> Boggle::getLastHighlighted() {
+Queue<dieLocation> Boggle::getLastHighlighted() {
     return lastHumanWord;
+}
+
+void Boggle::addToScore(int amount, bool player) {
+    if(player) Boggle::playerScore += amount;
+    else Boggle::computerScore += amount;
 }
