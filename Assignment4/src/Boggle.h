@@ -91,21 +91,90 @@ public:
      */
     Set<string> getPlayerWords();
 
-    // TODO: add any other member functions/variables necessary
-
 private:
+    /**
+     * @brief board The board representing a game of boggle
+     */
     Grid<char> board;
+
+    /**
+     * @brief humanWords All words found by human player
+     */
     Set<string> humanWords;
+
+    /**
+     * @brief dict The dictionary used for a boggle game
+     */
     Lexicon* dict;
+
+    /**
+     * @brief playerScore, computerScore The scores for each player
+     */
     int playerScore, computerScore;
+
+    /**
+     * @brief lastHumanWord The lastWord found by human in dieLocations, empty if word did not exist
+     */
     Queue<dieLocation> lastHumanWord;
+
+    /**
+     * @brief createRandomBoard Creates a random board
+     * @return Rnadomly generated board
+     */
     Grid<char> createRandomBoard();
+
+    /**
+     * @brief randomChar Gets a random character from a string
+     * @param index The index of the string, in an array of strings
+     * @return The random character
+     */
     char randomChar(int index, string (&cubes)[16]);
+
+    /**
+     * @brief createBoard Creates a board from a given string
+     * @param cubefaces The string to represent a board
+     * @return The created board
+     */
     Grid<char> createBoard(string cubefaces);
+
+    /**
+     * @brief humanWordSearchRecursive Finds whether or not a word exists
+     * @param word The word to be found
+     * @param letterIndex The current index in the word
+     * @param markedLocations The letters already used in the board
+     * @param currDie The currDie to look for neighbors
+     * @return Whether or not word can be made on the board
+     */
     bool humanWordSearchRecursive(string word, int letterIndex, Grid<bool> &markedLocations, dieLocation currDie);
+
+    /**
+     * @brief getUnmarkedNeighbors Finds neighbors of a currentDie location that have not been used to make a word
+     * @param markedLocations The grid representing already marked locations
+     * @param currentDie The currDie location
+     * @return All unmarked neighbors
+     */
     Set<dieLocation> getUnmarkedNeighbors(Grid<bool> &markedLocations, dieLocation currentDie);
+
+    /**
+     * @brief boardAsSet dieLocations to represent a board
+     * @return A set of dieLocations to represent a board
+     */
     Set<dieLocation> boardAsSet();
+
+    /**
+     * @brief computerWordSearchRecursive Recursive function to find all words in board not found by player
+     * @param foundWords All words found by computer
+     * @param markedLocations All marked locations
+     * @param currWord Word being made
+     * @param currDie Current location on board
+     */
     void computerWordSearchRecursive(Set<string> &foundWords, Grid<bool> &markedLocations, string currWord, dieLocation currDie);
+
+    /**
+     * @brief addToScore Adds score to a player
+     * @param amount Amount to add
+     * @param player true if human player, false if computer player
+     */
     void addToScore(int amount, bool player);
 };
 
