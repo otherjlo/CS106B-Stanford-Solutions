@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.2.1, 2015-05-03T14:53:02. -->
+<!-- Written by QtCreator 3.2.1, 2015-06-23T22:36:34. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -223,7 +223,7 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Boggle</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Boggle2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/Josue Lopez/Documents/GitHub/CS106B-Stanford-Solutions/Assignment4/Boggle.pro</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">Boggle.pro</value>
