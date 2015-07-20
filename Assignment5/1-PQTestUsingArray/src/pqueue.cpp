@@ -14,26 +14,42 @@
 #include <string>
 #include "error.h"
 #include "pqueue.h"
+#include "vector.h"
 using namespace std;
 
+typedef struct Entry {
+    int priority;
+    string value;
+}Entry;
+
+Vector<Entry *> *priorityqueue;
+
 PriorityQueue::PriorityQueue() {
-   // TODO: Fill in the necessary code
+    priorityqueue = new Vector<Entry *>();
 }
 
 PriorityQueue::~PriorityQueue() {
-   // TODO: Fill in the necessary code
+    for(Entry *currEntry : *priorityqueue) {
+        delete currEntry;
+        currEntry = NULL;
+    }
+    delete priorityqueue;
+    priorityqueue = NULL;
 }
 
 int PriorityQueue::size() {
-   return 0;  // TODO: Replace this line with the necessary code
+   return priorityqueue->size();
 }
 
 bool PriorityQueue::isEmpty() {
-   return true;  // TODO: Replace this line with the necessary code
+   return priorityqueue->isEmpty();
 }
 
 void PriorityQueue::clear() {
-   // TODO: Fill in the necessary code
+    for(Entry *currEntry : *priorityqueue) {
+        delete currEntry;
+        currEntry = NULL;
+    }
 }
 
 void PriorityQueue::enqueue(string value, double priority) {
@@ -45,11 +61,11 @@ string PriorityQueue::dequeue() {
 }
 
 string PriorityQueue::peek() {
-   return "";  // TODO: Replace this line with the necessary code
+    return priorityqueue->get(0)->value;
 }
 
 double PriorityQueue::peekPriority() {
-   return 0;  // TODO: Replace this line with the necessary code
+   return priorityqueue->get(0)->priority;
 }
 
 /*
