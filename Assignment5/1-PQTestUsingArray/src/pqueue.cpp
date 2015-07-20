@@ -20,6 +20,9 @@ using namespace std;
 typedef struct Entry {
     int priority;
     string value;
+    bool operator<(const Entry &ent2) const{
+        return priority < ent2.priority;
+    }
 }Entry;
 
 Vector<Entry *> *priorityqueue;
@@ -53,7 +56,18 @@ void PriorityQueue::clear() {
 }
 
 void PriorityQueue::enqueue(string value, double priority) {
-   // TODO: Fill in the necessary code
+    Entry* entry = new Entry();
+    entry->value = value;
+    entry->priority = priority;
+    if(!priorityqueue->isEmpty()) {
+      for(int i = 0; i < priorityqueue->size(); i++) {
+          if(priority > priorityqueue->get(i)->priority) continue;
+          priorityqueue->insert(i, entry);
+      }
+  }
+  else {
+      priorityqueue->add(entry);
+  }
 }
 
 string PriorityQueue::dequeue() {
