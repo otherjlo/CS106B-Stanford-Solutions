@@ -59,12 +59,21 @@ void PriorityQueue::enqueue(string value, double priority) {
     Entry* entry = new Entry();
     entry->value = value;
     entry->priority = priority;
+    //Don't bother looping in empty
     if(!priorityqueue->isEmpty()) {
       for(int i = 0; i < priorityqueue->size(); i++) {
-          if(priority > priorityqueue->get(i)->priority) continue;
-          priorityqueue->insert(i, entry);
+          //If their is a priority higher than passed, EG. 1 is higher than 2 in priority
+          if(priority > priorityqueue->get(i)->priority) {
+              //If we haven't reached the max index, then their is still a possibility this priority is "higher" than another. See above example
+              if(i != priorityqueue->size() - 1) continue;
+              //every other entry in list has a higher priority, so append new entry
+              else priorityqueue->add(entry);
+          }
+          //We found a priority lower than the one passed, so insert it before said priority
+          else priorityqueue->insert(i, entry);
       }
   }
+  //No existing entries, so just add the new one
   else {
       priorityqueue->add(entry);
   }
