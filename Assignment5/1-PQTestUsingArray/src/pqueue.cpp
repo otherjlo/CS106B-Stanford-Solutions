@@ -18,17 +18,19 @@
 using namespace std;
 
 typedef struct Entry {
-    int priority;
+    double priority;
     string value;
     bool operator<(const Entry &ent2) const{
         return priority < ent2.priority;
     }
 }Entry;
 
-Vector<Entry *> *priorityqueue;
+Vector<Entry*> *priorityqueue;
+int pqueueSize;
 
 PriorityQueue::PriorityQueue() {
-    priorityqueue = new Vector<Entry *>();
+    priorityqueue = new Vector<Entry*>();
+    pqueueSize = 0;
 }
 
 PriorityQueue::~PriorityQueue() {
@@ -61,26 +63,36 @@ void PriorityQueue::enqueue(string value, double priority) {
     entry->priority = priority;
     //Don't bother looping in empty
     if(!priorityqueue->isEmpty()) {
-      for(int i = 0; i < priorityqueue->size(); i++) {
+      for(int i = 0; i < pqueueSize; i++) {
           //If their is a priority higher than passed, EG. 1 is higher than 2 in priority
           if(priority > priorityqueue->get(i)->priority) {
               //If we haven't reached the max index, then their is still a possibility this priority is "higher" than another. See above example
-              if(i != priorityqueue->size() - 1) continue;
+              if(i != pqueueSize - 1) continue;
               //every other entry in list has a higher priority, so append new entry
               else priorityqueue->add(entry);
           }
-          //We found a priority lower than the one passed, so insert it before said priority
-          else priorityqueue->insert(i, entry);
+          //We found a priority lower than the one passed, so insert it before said priority/ then break
+          else {
+              priorityqueue->insert(i, entry);
+              break;
+          }
       }
   }
   //No existing entries, so just add the new one
   else {
       priorityqueue->add(entry);
   }
+    pqueueSize++;
 }
 
 string PriorityQueue::dequeue() {
-   return "";  // TODO: Replace this line with the necessary code
+   string value = priorityqueue->get(0)->value;
+   Entry* ent = priorityqueue->get(0);
+   priorityqueue->remove(0);
+   delete ent;
+   ent = NULL;
+   pqueueSize--;
+   return value;
 }
 
 string PriorityQueue::peek() {
