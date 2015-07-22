@@ -43,11 +43,11 @@ PriorityQueue::~PriorityQueue() {
 }
 
 int PriorityQueue::size() {
-   return priorityqueue->size();
+   return pqueueSize;
 }
 
 bool PriorityQueue::isEmpty() {
-   return priorityqueue->isEmpty();
+   return pqueueSize == 0;
 }
 
 void PriorityQueue::clear() {
@@ -86,6 +86,7 @@ void PriorityQueue::enqueue(string value, double priority) {
 }
 
 string PriorityQueue::dequeue() {
+   if(isEmpty()) error ("Cannot dequeue from an empty PriorityQueue!");
    string value = priorityqueue->get(0)->value;
    Entry* ent = priorityqueue->get(0);
    priorityqueue->remove(0);
@@ -96,10 +97,14 @@ string PriorityQueue::dequeue() {
 }
 
 string PriorityQueue::peek() {
-    return priorityqueue->get(0)->value;
+    if(isEmpty()) {
+        error("Cannot retrieve value from an empty PriorityQueue!");
+    }
+    return priorityqueue->get(0)->value;;
 }
 
 double PriorityQueue::peekPriority() {
+   if(isEmpty()) error("Cannot retrieve priority from an empty PriorityQueue!");
    return priorityqueue->get(0)->priority;
 }
 
