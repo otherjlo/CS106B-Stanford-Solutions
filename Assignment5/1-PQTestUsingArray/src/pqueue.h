@@ -14,6 +14,7 @@
 #define _pqueue_h
 
 #include "error.h"
+#include "vector.h"
 
 /*
  * Class: PriorityQueue
@@ -53,7 +54,7 @@ public:
  * Returns the number of values in the priority queue.
  */
 
-   int size();
+   int size() const;
 
 /*
  * Method: isEmpty
@@ -62,7 +63,7 @@ public:
  * Returns true if the priority queue contains no elements.
  */
 
-   bool isEmpty();
+   bool isEmpty() const;
 
 /*
  * Method: clear
@@ -104,7 +105,7 @@ public:
  * removing it.
  */
 
-   std::string peek();
+   std::string peek() const;
 
 /*
  * Method: peekPriority
@@ -114,7 +115,7 @@ public:
  * removing it.
  */
 
-   double peekPriority();
+   double peekPriority() const;
 
 /*
  * Method: copy constructor
@@ -150,11 +151,22 @@ private:
       double priority;
    };
 
+   typedef struct Entry {
+       double priority;
+       std::string value;
+       bool operator<(const Entry &ent2) const{
+           return priority < ent2.priority;
+       }
+   }Entry;
+
+
 /* Constants */
 
    static const int INITIAL_CAPACITY = 10;
 
 /* Instance variables */
+   Vector<Entry*> *priorityqueue;
+   int pqueueSize;
 
    ValuePriorityPair *array;
    int count;
@@ -179,6 +191,15 @@ private:
       for (int i = 0; i < count; i++) {
          array[i] = src.array[i];
       }
+   }
+
+   void copyDeep(const PriorityQueue &src) {
+       while(!isEmpty()) {
+           dequeue();
+       }
+       for(int i = 0; i < src.size(); i++) {
+           enqueue(src.priorityqueue->get(i)->value, src.priorityqueue->get(i)->priority);
+       }
    }
 
 };

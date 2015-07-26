@@ -17,16 +17,6 @@
 #include "vector.h"
 using namespace std;
 
-typedef struct Entry {
-    double priority;
-    string value;
-    bool operator<(const Entry &ent2) const{
-        return priority < ent2.priority;
-    }
-}Entry;
-
-Vector<Entry*> *priorityqueue;
-int pqueueSize;
 
 PriorityQueue::PriorityQueue() {
     priorityqueue = new Vector<Entry*>();
@@ -34,19 +24,21 @@ PriorityQueue::PriorityQueue() {
 }
 
 PriorityQueue::~PriorityQueue() {
-    for(Entry *currEntry : *priorityqueue) {
-        delete currEntry;
-        currEntry = NULL;
+    if(size() != 0) {
+        for(Entry *currEntry : *priorityqueue) {
+            delete currEntry;
+            currEntry = NULL;
+        }
     }
     delete priorityqueue;
     priorityqueue = NULL;
 }
 
-int PriorityQueue::size() {
+int PriorityQueue::size() const {
    return pqueueSize;
 }
 
-bool PriorityQueue::isEmpty() {
+bool PriorityQueue::isEmpty() const {
    return pqueueSize == 0;
 }
 
@@ -55,6 +47,7 @@ void PriorityQueue::clear() {
         delete currEntry;
         currEntry = NULL;
     }
+    pqueueSize = 0;
 }
 
 void PriorityQueue::enqueue(string value, double priority) {
@@ -96,14 +89,14 @@ string PriorityQueue::dequeue() {
    return value;
 }
 
-string PriorityQueue::peek() {
+string PriorityQueue::peek() const {
     if(isEmpty()) {
         error("Cannot retrieve value from an empty PriorityQueue!");
     }
     return priorityqueue->get(0)->value;;
 }
 
-double PriorityQueue::peekPriority() {
+double PriorityQueue::peekPriority() const {
    if(isEmpty()) error("Cannot retrieve priority from an empty PriorityQueue!");
    return priorityqueue->get(0)->priority;
 }
@@ -116,7 +109,9 @@ double PriorityQueue::peekPriority() {
  */
 
 PriorityQueue::PriorityQueue(const PriorityQueue & src) {
-   deepCopy(src);
+   priorityqueue = new Vector<Entry*>();
+   pqueueSize = 0;
+   copyDeep(src);
 }
 
 PriorityQueue & PriorityQueue::operator=(const PriorityQueue & src) {
