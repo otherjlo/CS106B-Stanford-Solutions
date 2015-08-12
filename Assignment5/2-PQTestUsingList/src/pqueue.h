@@ -14,6 +14,7 @@
 #define _pqueue_h
 
 #include "error.h"
+#include <string>
 
 /*
  * Class: PriorityQueue
@@ -142,8 +143,14 @@ public:
 /**********************************************************************/
 
 private:
+   typedef struct Entry {
+       double priority;
+       std::string value;
+       Entry* next;
+   }Entry;
 
-// TODO: Fill in the rest of the private section 
+   int listsize;
+   Entry* list;
 
    void deepCopy(const PriorityQueue & src) {
       // TODO: Write the code to copy a linked-list queue

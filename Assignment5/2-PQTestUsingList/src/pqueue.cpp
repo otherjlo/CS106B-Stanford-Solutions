@@ -16,7 +16,50 @@
 #include "pqueue.h"
 using namespace std;
 
-// TODO: Add your method definitions here
+PriorityQueue::PriorityQueue() {
+    listsize = 0;
+    list = NULL;
+}
+
+PriorityQueue::~PriorityQueue() {
+    clear();
+}
+
+
+int PriorityQueue::size() {
+    return listsize;
+}
+
+void PriorityQueue::clear() {
+    while(list != NULL) {
+        Entry* temp = list->next;
+        delete list;
+        list = temp;
+    }
+}
+
+bool PriorityQueue::isEmpty() {
+    return size() == 0;
+}
+
+string PriorityQueue::peek() {
+    if(size() == 0) error("Cannot call peek() on an empty PriorityQueue!");
+    return list->value;
+}
+
+double PriorityQueue::peekPriority() {
+    if(size() == 0) error("Cannot call peekPriority() on an empty PriorityQueue!");
+    return list->priority;
+}
+
+string PriorityQueue::dequeue() {
+    if(size() == 0) error("Cannot call dequeue() on an empty PriorityQueue!");
+    Entry* next = list->next;
+    string value = list ->value;
+    delete list;
+    list = next;
+    return value;
+}
 
 /*
  * Implementation notes: copy constructor and assignment operator
