@@ -51,9 +51,7 @@ void PriorityQueue::clear() {
 }
 
 void PriorityQueue::enqueue(string value, double priority) {
-    Entry* entry = new Entry();
-    entry->value = value;
-    entry->priority = priority;
+    Entry* entry = new Entry {priority, value};
     //Don't bother looping in empty
     if(!priorityqueue->isEmpty()) {
       for(int i = 0; i < pqueueSize; i++) {
