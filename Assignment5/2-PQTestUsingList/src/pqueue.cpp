@@ -32,7 +32,9 @@ void PriorityQueue::enqueue(string value, double priority) {
         return;
     }
     Entry* curr;
+    Entry* temp;
     for(curr = list; curr != NULL; curr = list->next) {
+
         if(priority < curr->priority) {
             Entry* newEnt = new Entry {priority, value, curr, curr->previous};
             if(newEnt->previous == NULL) {
@@ -44,8 +46,10 @@ void PriorityQueue::enqueue(string value, double priority) {
             listsize++;
             return;
         }
+        if(curr != NULL) temp = curr;
     }
-    Entry* newEnt = new Entry {priority, value, NULL, curr};
+    Entry* newEnt = new Entry {priority, value, NULL, temp};
+    temp->next = newEnt;
     listsize++;
 }
 
