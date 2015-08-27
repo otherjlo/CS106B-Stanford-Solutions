@@ -147,6 +147,7 @@ private:
        double priority;
        std::string value;
        Entry* next;
+       Entry* previous;
    }Entry;
 
    int listsize;

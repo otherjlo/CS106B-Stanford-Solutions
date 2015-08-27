@@ -25,6 +25,29 @@ PriorityQueue::~PriorityQueue() {
     clear();
 }
 
+void PriorityQueue::enqueue(string value, double priority) {
+    if(isEmpty()) {
+        list = new Entry {priority, value, NULL, NULL};
+        listsize++;
+        return;
+    }
+    Entry* curr;
+    for(curr = list; curr != NULL; curr = list->next) {
+        if(priority < curr->priority) {
+            Entry* newEnt = new Entry {priority, value, curr, curr->previous};
+            if(newEnt->previous == NULL) {
+                list = newEnt;
+            }
+            else {
+                newEnt->previous->next = newEnt;
+            }
+            listsize++;
+            return;
+        }
+    }
+    Entry* newEnt = new Entry {priority, value, NULL, curr};
+    listsize++;
+}
 
 int PriorityQueue::size() {
     return listsize;
@@ -36,6 +59,7 @@ void PriorityQueue::clear() {
         delete list;
         list = temp;
     }
+    listsize = 0;
 }
 
 bool PriorityQueue::isEmpty() {
@@ -43,21 +67,22 @@ bool PriorityQueue::isEmpty() {
 }
 
 string PriorityQueue::peek() {
-    if(size() == 0) error("Cannot call peek() on an empty PriorityQueue!");
+    if(isEmpty()) error("Cannot call peek() on an empty PriorityQueue!");
     return list->value;
 }
 
 double PriorityQueue::peekPriority() {
-    if(size() == 0) error("Cannot call peekPriority() on an empty PriorityQueue!");
+    if(isEmpty()) error("Cannot call peekPriority() on an empty PriorityQueue!");
     return list->priority;
 }
 
 string PriorityQueue::dequeue() {
-    if(size() == 0) error("Cannot call dequeue() on an empty PriorityQueue!");
+    if(isEmpty()) error("Cannot call dequeue() on an empty PriorityQueue!");
     Entry* next = list->next;
-    string value = list ->value;
+    string value = list->value;
     delete list;
     list = next;
+    listsize--;
     return value;
 }
 
