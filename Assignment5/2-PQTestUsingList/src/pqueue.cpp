@@ -26,34 +26,31 @@ PriorityQueue::~PriorityQueue() {
 }
 
 void PriorityQueue::enqueue(string value, double priority) {
-    if(isEmpty()) {
-        list = new Entry {priority, value, NULL, NULL};
+    //First element to be added, since none exist
+    if(list == NULL) {
+        list = new Entry{priority, value, NULL};
         listsize++;
         return;
     }
-    Entry* curr;
-    Entry* temp;
-    for(curr = list; curr != NULL; curr = list->next) {
-
+    Entry* curr; Entry* previous = NULL;
+    for(curr = list; curr != NULL; curr = curr->next) {
         if(priority < curr->priority) {
-            Entry* newEnt = new Entry {priority, value, curr, curr->previous};
-            if(newEnt->previous == NULL) {
-                list = newEnt;
-            }
-            else {
-                newEnt->previous->next = newEnt;
-            }
+            Entry* newEnt = new Entry{priority, value, curr};
+            //Exception, priority is less than list's(first element) priority
+            if(previous != NULL)previous->next = newEnt;
+            else list = newEnt;
             listsize++;
             return;
         }
-        if(curr != NULL) temp = curr;
+        previous = curr;
     }
-    Entry* newEnt = new Entry {priority, value, NULL, temp};
-    temp->next = newEnt;
+    //Ends up being last element in list
+    Entry* ent = new Entry{priority, value ,NULL};
+    previous->next = ent;
     listsize++;
 }
 
-int PriorityQueue::size() {
+int PriorityQueue::size() const{
     return listsize;
 }
 
@@ -66,16 +63,16 @@ void PriorityQueue::clear() {
     listsize = 0;
 }
 
-bool PriorityQueue::isEmpty() {
+bool PriorityQueue::isEmpty() const{
     return size() == 0;
 }
 
-string PriorityQueue::peek() {
+string PriorityQueue::peek() const{
     if(isEmpty()) error("Cannot call peek() on an empty PriorityQueue!");
     return list->value;
 }
 
-double PriorityQueue::peekPriority() {
+double PriorityQueue::peekPriority() const{
     if(isEmpty()) error("Cannot call peekPriority() on an empty PriorityQueue!");
     return list->priority;
 }

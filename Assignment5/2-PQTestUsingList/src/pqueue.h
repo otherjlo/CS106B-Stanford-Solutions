@@ -15,6 +15,7 @@
 
 #include "error.h"
 #include <string>
+#include<iostream>
 
 /*
  * Class: PriorityQueue
@@ -54,7 +55,7 @@ public:
  * Returns the number of values in the priority queue.
  */
 
-   int size();
+   int size() const;
 
 /*
  * Method: isEmpty
@@ -63,7 +64,7 @@ public:
  * Returns true if the priority queue contains no elements.
  */
 
-   bool isEmpty();
+   bool isEmpty() const;
 
 /*
  * Method: clear
@@ -105,7 +106,7 @@ public:
  * removing it.
  */
 
-   std::string peek();
+   std::string peek() const;
 
 /*
  * Method: peekPriority
@@ -115,7 +116,7 @@ public:
  * removing it.
  */
 
-   double peekPriority();
+   double peekPriority() const;
 
 /*
  * Method: copy constructor
@@ -147,16 +148,27 @@ private:
        double priority;
        std::string value;
        Entry* next;
-       Entry* previous;
+
    }Entry;
 
    int listsize;
    Entry* list;
 
-   void deepCopy(const PriorityQueue & src) {
-      // TODO: Write the code to copy a linked-list queue
+   void deepCopyRecursive(const PriorityQueue &src, Entry* previous, Entry* curr, bool isFirst) {
+       if(curr == NULL) {
+           return;
+       }
+       Entry* copy = new Entry{curr->priority, curr->value, NULL};
+       if(isFirst) list = copy;
+       else previous->next = copy;
+       deepCopyRecursive(src, copy, curr->next, false);
    }
 
+   void deepCopy(const PriorityQueue & src) {
+       list = NULL;
+       deepCopyRecursive(src, NULL, src.list, true);
+       listsize = src.size();
+   }
 };
 
 #endif
