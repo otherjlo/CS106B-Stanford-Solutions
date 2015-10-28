@@ -143,10 +143,38 @@ public:
 
 private:
 
+   typedef struct Entry {
+       double priority;
+       std::string value;
+   }Entry;
+
+   void bubbleUp(Entry entry, int index);
+   void bubbleDown(int index);
+
+   int heapsize;
+   int capacity;
+   Entry* heap;
+
+   void expandCapacity() {
+         Entry* oldArray = heap;
+         capacity *= 2;
+         heap = new Entry[capacity];
+         for (int i = 0; i < heapsize; i++) {
+            heap[i] = oldArray[i];
+         }
+
+         delete[] oldArray;
+   }
+
+
 // TODO: Fill in the rest of the private section 
 
    void deepCopy(const PriorityQueue & src) {
-      // TODO: Write the code to copy a heap-based queue
+      heap = new Entry[src.heapsize];
+      for(int i = 0; i < src.heapsize; i++) {
+          heap[i] = src.heap[i];
+      }
+      heapsize = src.heapsize;
    }
 
 };
