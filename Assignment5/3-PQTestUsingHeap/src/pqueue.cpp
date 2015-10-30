@@ -1,16 +1,3 @@
-/*
- * File: pqueue.cpp (heap version)
- * -------------------------------
- * Name: [TODO: enter name here]
- * Section: [TODO: enter section leader here]
- * This file implements the pqueue.h interface using a heap as the
- * underlying representation.  Only the copy constructor and assignment
- * operator are included.  Your job is to include definitions for the
- * other exported methods and to make a change to the definition of the
- * assignment operator so that it deletes any old storage.
- * [TODO: extend the documentation]
- */
-
 #include <iostream>
 #include <string>
 #include "error.h"
@@ -29,6 +16,7 @@ PriorityQueue::~PriorityQueue() {
     delete[] heap;
 }
 
+
 void PriorityQueue::enqueue(string value, double priority) {
     //Set as root if empty
     if(size() == 0) {
@@ -37,7 +25,7 @@ void PriorityQueue::enqueue(string value, double priority) {
         return;
     }
     //Expand if full
-    if(heapsize == capacity) {
+    if(heapsize >= capacity) {
         expandCapacity();
     }
     //Create new entry and insert
@@ -102,14 +90,27 @@ string PriorityQueue::dequeue() {
     return value;
 }
 
+/**
+ * @brief getLeftChildIndex
+ * @param index parent index
+ * @return Left child of index
+ */
 int getLeftChildIndex(int index) {
     return (index * 2) + 1;
 }
+/**
+ * @brief getRightChildIndex
+ * @param index Parent index
+ * @return Right child of index
+ */
 int getRightChildIndex(int index) {
     return (index * 2) + 2;
 }
 
-
+/**
+ * @brief PriorityQueue::bubbleDown Perform bubbleDown algorithm to sort a heap
+ * @param index Root on first level, min child index on all other levels
+ */
 void PriorityQueue::bubbleDown(int index) {
     int leftChildIndex, rightChildIndex, minIndex;
     //Find left and right child index
@@ -128,6 +129,7 @@ void PriorityQueue::bubbleDown(int index) {
         //Choose between left child and right child
         minIndex = heap[leftChildIndex].priority <= heap[rightChildIndex].priority ? leftChildIndex : rightChildIndex;
     }
+    //If greater than child, swap. and recur
     if(heap[minIndex].priority <= heap[index].priority) {
         Entry temp = heap[index];
         heap[index] = heap[minIndex];
@@ -136,21 +138,32 @@ void PriorityQueue::bubbleDown(int index) {
     }
 }
 
+/**
+ * @brief PriorityQueue::peek
+ * @return Priority of first element
+ */
 string PriorityQueue::peek() {
     if(size() == 0) error("Cannot call peek on an empty PriorityQueue!");
     return heap[0].value;
 }
 
+/**
+ * @brief PriorityQueue::peekPriority
+ * @return value of first element
+ */
 double PriorityQueue::peekPriority() {
     if(size() == 0) error("Cannot call peekPriority on an empty PriorityQueue!");
     return heap[0].priority;
 }
 
+/**
+ * @brief PriorityQueue::isEmpty
+ * @return true if pqueue is empty
+ */
 bool PriorityQueue::isEmpty() {
     return size()==0;
 }
 
-// TODO: Add your method definitions here
 
 /*
  * Implementation notes: copy constructor and assignment operator
@@ -165,7 +178,6 @@ PriorityQueue::PriorityQueue(const PriorityQueue & src) {
 
 PriorityQueue & PriorityQueue::operator=(const PriorityQueue & src) {
    if (this != &src) {
-      // TODO: Include code to delete any data from the old queue
       deepCopy(src);
    }
    return *this;

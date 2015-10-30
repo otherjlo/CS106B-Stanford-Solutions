@@ -155,6 +155,11 @@ private:
    int capacity;
    Entry* heap;
 
+/*
+ * Method: expand capacity
+ * -----------------------
+ * Expands capacity of array representing PriorityQueue
+ */
    void expandCapacity() {
          Entry* oldArray = heap;
          capacity *= 2;
@@ -165,16 +170,18 @@ private:
 
          delete[] oldArray;
    }
-
-
-// TODO: Fill in the rest of the private section 
-
+   /*
+    * Method: deep copy
+    * -----------------
+    * Copies elements from passed pqueue into THIS PriorityQueue
+    */
    void deepCopy(const PriorityQueue & src) {
       heap = new Entry[src.heapsize];
       for(int i = 0; i < src.heapsize; i++) {
           heap[i] = src.heap[i];
       }
       heapsize = src.heapsize;
+      capacity = src.capacity;
    }
 
 };
